@@ -89,3 +89,46 @@ System.out.println(sb1.toString().equals(sb2.toString()));  // true，比较内�
 - 对于 `String`，`equals()` 方法比较内容。
 - 对于 `StringBuilder` 和 `StringBuffer`，默认情况下 `equals()` 方法比较的是引用，不是内容。需要调用 `toString()` 方法将其转换为字符串后再比较。
 
+## 5. Date 类型怎么用
+`Date` 类的 `getTime()` 方法用于获取自1970年1月1日00:00:00 GMT（格林尼治标准时间）以来的毫秒数。这个毫秒数可以表示 `Date` 对象所代表的时间点。
+
+下面是一个简单的示例，演示如何使用 `getTime()` 方法：
+
+```java
+import java.util.Date;
+
+public class Example {
+    public static void main(String[] args) {
+        // 创建一个 Date 对象，表示当前时间
+        Date currentDate = new Date();
+
+        // 使用 getTime() 方法获取毫秒数
+        long milliseconds = currentDate.getTime();
+
+        System.out.println("Current Date: " + currentDate);
+        System.out.println("Milliseconds since 1970-01-01 00:00:00 GMT: " + milliseconds);
+    }
+}
+```
+
+在这个例子中，首先创建了一个 `Date` 对象表示当前时间。然后使用 `getTime()` 方法获取当前时间的毫秒数，并打印出来。
+
+需要注意的是，`Date` 类现在被认为是过时的类，推荐使用 `java.time` 包中的 `Instant` 或 `LocalDateTime` 类来代替。下面是一个使用 `Instant` 类的示例：
+
+```java
+import java.time.Instant;
+
+public class Example {
+    public static void main(String[] args) {
+        // 创建一个表示当前时间的 Instant 对象
+        Instant currentInstant = Instant.now();
+
+        // 使用 getEpochSecond() 方法获取秒数
+        long seconds = currentInstant.getEpochSecond();
+
+        System.out.println("Current Instant: " + currentInstant);
+        System.out.println("Seconds since 1970-01-01 00:00:00 GMT: " + seconds);
+    }
+}
+```
+这个例子中，使用 `Instant` 类的 `getEpochSecond()` 方法获取了从 1970 年1月1日00:00:00 GMT以来的秒数。这种方式更加现代化，并提供更多的日期和时间操作方法。

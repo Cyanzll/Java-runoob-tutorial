@@ -87,7 +87,13 @@ public class HelloWorld {
         StringBuilder temp_hello = appendable_hello;
         System.out.println(temp_hello == appendable_hello.append("world")); // the result is always true;
 
-
+//        Java 日期对象 - Date
+//        构造一个日期对象（参数留空表示以当前时间初始化）
+        Date date = new Date();
+//        实例方法 toString() 可用于打印当前日期和时间
+        System.out.println(date.toString());
+//        实例方法 getTime() 可用于获取1970年1月1日以来的毫秒数（Milliseconds），以用于时间对象之间的比较
+        System.out.println(date.getTime());
 
     }
 }
