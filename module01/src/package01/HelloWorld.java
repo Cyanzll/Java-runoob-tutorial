@@ -1,6 +1,8 @@
 package package01;
 
 import java.util.*;
+import java.util.regex.*;
+import java.time.Instant;
 
 /*
  * newbee01.package01.HelloWorld
@@ -66,11 +68,11 @@ public class HelloWorld {
         // 方法一：创建的String位于公共池（Pool）
         String str1 = "hello";
         String str2 = "hello";
-        System.out.println(str1 == str2); // 在公共池中，相同的字符串只存在一份实例，从而减少内存资源的消耗
+//        System.out.println(str1 == str2); // 在公共池中，相同的字符串只存在一份实例，从而减少内存资源的消耗
         // 方法二：创建的String位于堆内存（Heap）中，为所有进程所共享
         String str3 = new String("hello");
         String str4 = new String("hello");
-        System.out.println(str3 == str4); // 对应两份实例
+//        System.out.println(str3 == str4); // 对应两份实例
 
 //         String对象一经创建就不可修改，即使通过concat方法实现拼接，也只会生成新的字符串
 //         在这点上，String对象可以视作字符串常量
@@ -81,19 +83,108 @@ public class HelloWorld {
 //         多线程场景下，由于堆内存中的字符串对象被所有线程共享，需要考虑同步问题，所以优先使用 StringBuffer
 //         现代应用程序大多为单线程场景，使用 StringBuilder 较为普遍
         String hello = "hello, ";
-        System.out.println(hello == hello.concat("world"));
+//        System.out.println(hello == hello.concat("world"));
 
         StringBuilder appendable_hello = new StringBuilder("hello, ");
         StringBuilder temp_hello = appendable_hello;
-        System.out.println(temp_hello == appendable_hello.append("world")); // the result is always true;
+//        System.out.println(temp_hello == appendable_hello.append("world")); // the result is always true;
+
+        // 使用 StringBuilder 和 StringBuffer时需要注意
+        StringBuilder sb1 = new StringBuilder("hello");
+        StringBuilder sb2 = new StringBuilder("hello");
+        System.out.println(sb1.equals(sb2));
+        // 应当先调用 toString() 方法后，再使用 equals() 方法进行比较
+        System.out.println(sb1.toString().equals(sb2.toString()));
 
 //        Java 日期对象 - Date
 //        构造一个日期对象（参数留空表示以当前时间初始化）
         Date date = new Date();
 //        实例方法 toString() 可用于打印当前日期和时间
-        System.out.println(date.toString());
+//        System.out.println(date.toString());
 //        实例方法 getTime() 可用于获取1970年1月1日以来的毫秒数（Milliseconds），以用于时间对象之间的比较
-        System.out.println(date.getTime());
+//        System.out.println(date.getTime());
 
+        // Date 类被认为是过时的类，可用 java.time.Instant 包来代替
+        Instant currentInstant = Instant.now();
+        long seconds = currentInstant.getEpochSecond();
+        System.out.println("Current Instant: " + currentInstant);
+        // Instant 对象可通过 getEpochSecond() 获取秒数
+        System.out.println("Seconds since 1970-01-01: " + seconds);
+
+//     -- Java 正则表达式
+    // 场景1：判断一个 String 对象是否与正则表达式匹配
+        // 方法1：使用 String.matches()，简洁
+        String input1 = "123";
+        boolean isMatch1 = input1.matches("\\d+");
+
+        // 使用 Pattern.matches()，需传入两个参数
+        // Pattern 的实例方法接收 CharSequence 类型的对象，对 StringBuffer、StringBuilder 都适用
+        String input2 = "456";
+        boolean isMatch2 = Pattern.matches("\\d+", input2);
+
+        // 如果需要重复使用同一个正则表达式，最好预先编译得到一个 Pattern 对象，以提升代码效率
+        Pattern pat = Pattern.compile("\\d+");
+
+    // 场景2：使用正则表达式对一个字符串多次查找匹配，同时提供匹配的具体子序列、起始索引和结束索引等信息
+    // 任务：利用正则表达式找出一个句子中的所有单词
+        // 预编译，返回可复用的 Pattern 对象
+        Pattern pattern = Pattern.compile("\\b\\w+\\b");
+        // 注意，上述正则表达式没有通过圆括号创建捕获组，这使得以下的 group 方法只会返回匹配的第一个子序列
+        Matcher matcher = pattern.matcher("This is a sample sentence with multiple words.");
+
+        // 因此，这里循环使用 Matcher 对象的 find() 方法，返回布尔值表示是否找到匹配的子序列，它的每次调用都会移动到下一个匹配的位置
+        while(matcher.find()) {
+            // 使用 Matcher 对象的 group(), start(), end() 方法，返回子序列组、起始索引、结束索引
+            System.out.println("Matcher.find(): " + matcher.group());
+            System.out.println("Start index: " + matcher.start());
+            System.out.println("End index: " + matcher.end());
+        }
+
+        // 捕获组
+        // 创建正则表达式模式，带有一个捕获组，匹配单词边界和一个或多个字母数字字符
+        pattern = Pattern.compile("\\b(\\w+)\\b");
+
+        // 创建 Matcher 对象
+        matcher = pattern.matcher("This is a sample sentence with multiple words.");
+
+        // 查找匹配的单词
+        while (matcher.find()) {
+            // 在获取捕获组内的内容之前，一定要先执行 matcher.find()
+            System.out.println(matcher.group(0));
+            // 当正则表达式中含有捕获组时，matcher.group(0)返回所有捕获组的匹配的内容
+            // 这里 matcher.group(1)表示返回第一个捕获组匹配的内容
+            String word = matcher.group(1);
+            System.out.println("Word: " + word);
+        }
     }
+
+    // Java 方法
+    // 方法签名：指方法的 访问控制修饰符 名称 、 参数类型 以及 参数顺序 的组合
+    // [访问控制修饰符] [其他修饰符] 返回类型 方法名(参数列表) throws 异常列表 {
+    //     方法体
+    // }
+    // throws 通常是用来给你看的，不一定是让你来写的
+    public static String max(int a, int b) {
+        if (a > b) {
+            return "a is bigger";
+        } else if (a < b) {
+            return "b is bigger";
+        } else {
+            return "the same";
+        }
+    }
+
+    // 重载（Overload）：创建名称相同但参数类型和顺序不同的方法，返回值类型也可以不同
+    // 方法被调用时，根据签名自动选择对应的方法（比如此处根据传入的实参类型选择对应方法）
+    public static String max(double a, double b) {
+        if (a > b) {
+            return "a is bigger";
+        } else if (a < b) {
+            return "b is bigger";
+        } else {
+            return "the same";
+        }
+    }
+
+
 }
