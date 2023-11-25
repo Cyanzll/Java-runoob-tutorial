@@ -1,3 +1,5 @@
+// package pkg1[．pkg2[．pkg3…]];
+// 方括号内的内容代表其是可选的
 package package01;
 
 import java.util.*;
@@ -156,6 +158,21 @@ public class HelloWorld {
             String word = matcher.group(1);
             System.out.println("Word: " + word);
         }
+
+        String[] str_arr = {"dog", "cat", "bird"};
+        // System.out.println(str_arr[3]); Throws ArrayIndexOutOfBoundsException
+        try {
+            System.out.println(str_arr[3]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Caution: Out of Bounds!");
+        }
+
+        try {
+            sayHello("no");
+        } catch (NotHumanNameException e) {
+            System.out.println("too short!");
+        }
+
     }
 
     // Java 方法
@@ -174,6 +191,17 @@ public class HelloWorld {
         }
     }
 
+    // 使用 throws 关键字声明异常，使得该异常能够被传递
+    // 调用这一方法的时候，要么使用try...catch...块捕获异常，要么使用 throws 关键字
+    // 使得异常被继续传播下去
+    public static void sayHello(String name) throws NotHumanNameException{
+        if (name.length() < 3) {
+            throw new NotHumanNameException();
+        } else {
+            System.out.println("Hello, " + name);
+        }
+    }
+
     // 重载（Overload）：创建名称相同但参数类型和顺序不同的方法，返回值类型也可以不同
     // 方法被调用时，根据签名自动选择对应的方法（比如此处根据传入的实参类型选择对应方法）
     public static String max(double a, double b) {
@@ -185,6 +213,5 @@ public class HelloWorld {
             return "the same";
         }
     }
-
-
 }
+
