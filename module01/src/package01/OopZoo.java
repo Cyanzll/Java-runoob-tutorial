@@ -10,6 +10,8 @@
 package package01;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class OopZoo {
     public static void main(String[] args) {
@@ -31,6 +33,11 @@ public class OopZoo {
             e.makeSound();
         }
 
+    }
+
+    // 泛型方法定义，要注意：泛型参数应位于返回值类型之前
+    public static <T> void iterPrintlnString (T object) {
+        System.out.println(object.toString());
     }
 }
 
